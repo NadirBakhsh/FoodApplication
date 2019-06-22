@@ -1,0 +1,27 @@
+.navBarDiv{
+ display: inline;
+}
+
+.titleHeading{
+  display: inline;
+}
+
+.but-login, .but-signup {
+  float: right;
+    background-color: #519e8a;
+    color: #fff;
+    border: 2px solid #fff;
+    width: 100px;
+    margin-top: 0.5em;
+    padding: 8px 0px;
+    font-size: 1em;
+    font-weight: lighter;
+    letter-spacing: 1px;
+    margin-bottom: 0.25em;
+  }
+  
+ button:hover {
+    color: #519e8a;
+    background-color: #fff;
+    border: 2px solid #519e8a;
+  }
