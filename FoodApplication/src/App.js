@@ -13,7 +13,7 @@ class App extends Component {
       <div className="App">
       <Navigations />      
       </div>
-       </PersistGate>
+      </PersistGate>
      </Provider>
     );
   }

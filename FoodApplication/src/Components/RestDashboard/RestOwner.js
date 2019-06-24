@@ -6,25 +6,34 @@ import TabsItem from '../AppBar/TabsItem'
 import { logout } from '../../config/firebase'
 import InfoForm from '../InfoAdd/InfoAddForm'
 import Typography from '@material-ui/core/Typography';
-import InputForm from '../RestDashboard/InfoCellecetForm'
+import RestInfoInputForm from '../RestDashboard/InfoCellecetForm'
+import AddDishInputForm from '../RestDashboard/DishForm'
+import Orders from './Orders'
 class RestOwner extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             isLoading: true,
+            isRestForm: false,
         }
+
+        this.viewFunc = this.viewFunc.bind(this)
     }
 
     componentDidMount() {
         setTimeout(() => {
             this.setState({ isLoading: false })
-        }, 1500);
+        }, 500);
     }
 
+    viewFunc() {
+        const { isRestForm } = this.state;
+        this.setState({ isRestForm: !isRestForm })
+    }
 
     render() {
-        const { isLoading } = this.state;
+        const { isLoading, isRestForm } = this.state;
         return (
             <div>
                 {
@@ -32,19 +41,32 @@ class RestOwner extends Component {
                         <Appbar userName={"Welcome " + this.props.user.resturantName}
                             InfoForm={
                                 <div>
-                                    <InfoForm>
+                                    {isRestForm && <div> <InfoForm>
                                         <Typography variant="h5" component="h3">Resturant Information Form</Typography>
-                                        <InputForm />
-                                    </InfoForm> 
-                                    <br />
-                                    <InfoForm>
+                                        <RestInfoInputForm />
+                                    </InfoForm>
+                                        <br />
+                                        <InfoForm>
+                                            <Typography variant="h5" component="h3">Add Dishses</Typography>
+                                            <AddDishInputForm />
+                                        </InfoForm> </div>}
                                         
-                                   </InfoForm>
+                                        {/* {Resturen Order } */}
+                                        {true && <div> <InfoForm>
+                                            <center>
+                                        <Typography variant="h5" component="h3">Orders Dashboard</Typography>
+                                        </center>
+                    
+                                        <Orders />
+                                        
+                                        </InfoForm>
+                                        </div>}
+
                                 </div>
                             }>
 
                             <TabsItem
-                                myfunc={() => { "asd" }}
+                                myfunc={() => { this.viewFunc() }}
                                 myIcon={'fas fa-user-cog'}
                                 tabName={'Add Restaurants Info'}
                             />

@@ -5,13 +5,16 @@ const update_user = (user) => {
     }
 }
 
+
+
 const remove_user = () => {
     return {
         type: "REMOVE_USER"
     }
 }
 
+
 export {
     update_user,
-    remove_user
+    remove_user,
 }

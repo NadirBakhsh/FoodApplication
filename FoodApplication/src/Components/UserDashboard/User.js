@@ -18,7 +18,8 @@ class User extends Component {
             this.setState({ isLoading: false })
         }, 1500);
     }
-
+    
+ 
     render() {
         const { isLoading } = this.state;
 
@@ -28,7 +29,7 @@ class User extends Component {
                     <Appbar userName={"Welcome " + this.props.user.firstName}>
 
                         <TabsItem
-                            myfunc={() => { alert("User Info") }}
+                            myfunc={() => { alert('User Info') }}
                             myIcon={'fas fa-user-cog'}
                             tabName={'User Info'}
                         />

@@ -3,8 +3,11 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import {country_list,citiesName} from '../../assets/countryName'
-import CertificatForm from './CertificatForm'
+import Location from './Location';
+import { country_list, citiesName } from '../../assets/countryName'
+import {AddInfo} from '../../config/firebase'
+
+import Button from '@material-ui/core/Button';
 
 const countryName = country_list;
 const city = citiesName;
@@ -24,22 +27,47 @@ const useStyles = makeStyles(theme => ({
   menu: {
     width: 200,
   },
+  imgInput: {
+    display: 'flex',
+    justifyContent: "center",
+    width: "100%",
+  }
+
 }));
 
 export default function OutlinedTextFields() {
   const classes = useStyles();
   const [values, setValues] = React.useState({
-    name: 'Cat in the Hat',
-    age: '',
-    multiline: 'Controlled',
-    currency: 'EUR',
+    country: '',
+    city: '',
+    img: '',
   });
 
+
+  const InfoObject = {
+    country: values.country,
+    city: values.city,
+  }
+
+  const images = []
+
   const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value });
+    if(name !== 'img'){
+      setValues({ ...values, [name]: event.target.value });
+    }else{
+     // setValues({ ...values, [name]: event.target.files[0]});
+      //console.log(event.target.files[0].name)
+      images.push(event.target.files[0])
+    }
   };
 
+
+
+
+
+
   return (
+    <div>
     <form className={classes.container} noValidate autoComplete="off">
       <TextField
         id="outlined-select-country"
@@ -54,7 +82,7 @@ export default function OutlinedTextFields() {
             className: classes.menu,
           },
         }}
-      
+
         margin="normal"
         variant="outlined"
       >
@@ -78,7 +106,7 @@ export default function OutlinedTextFields() {
             className: classes.menu,
           },
         }}
-      
+
         margin="normal"
         variant="outlined"
       >
@@ -88,11 +116,43 @@ export default function OutlinedTextFields() {
           </MenuItem>
         ))}
       </TextField>
-
-            <CertificatForm />
+    
+      <div className={classes.imgInput}></div>
+      <TextField
+        id="outlined-name"
+        margin="normal"
+        variant="outlined" 
+        row="2"             
+        className={classes.textField}
+        onChange={handleChange('img')}
+        helperText="Select Your Resturant Certificat"
+        type="file"
+      />
       
 
+      <TextField
+        id="outlined-name"
+        margin="normal"
+        variant="outlined" 
+        row="2"             
+        className={classes.textField}
+        onChange={handleChange('img')}
+        helperText="Select Your Resturant Profile Image"
+        type="file"
+      />
+   <div style={{marginLeft:"25px",marginRight:'25px', marginTop:"16px"}}>
+    
+    <Location /> 
  
-    </form>
+    </div>
+      <Button style={{height:'55px', marginTop:"16px",marginLeft:"25px"}} onClick={()=>{AddInfo(images,InfoObject);}} variant="contained" color="primary" className={classes.button}>
+        Save Data
+      </Button>
+
+
+   </form>
+  </div>
   );
 }
+
+
