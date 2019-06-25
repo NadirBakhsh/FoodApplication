@@ -59,7 +59,7 @@ class MapLocation extends Component {
                     containerElement={<div style={{ height: `400px` }} />}
                     mapElement={<div style={{ height: `100%` }} />}
                 />
-                <Button onClick={this.locationUpdate} style={{ marginTop: '20px', position: 'absolute' }} variant="contained" color="primary" >
+                <Button onClick={this.locationUpdate} style={{ marginTop: '-45px', position: 'absolute' }} variant="contained" color="primary" >
                     Save Location
                  </Button>
             </div>

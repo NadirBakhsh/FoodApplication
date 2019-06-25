@@ -8,7 +8,11 @@ import InfoForm from '../InfoAdd/InfoAddForm'
 import Typography from '@material-ui/core/Typography';
 import RestInfoInputForm from '../RestDashboard/InfoCellecetForm'
 import AddDishInputForm from '../RestDashboard/DishForm'
-import Orders from './Orders'
+import PendingOrders from './PendingOrders'
+import Inprogress from './Inprogress'
+import Delivered from './Delivered'
+
+
 class RestOwner extends Component {
     constructor(props) {
         super(props);
@@ -16,9 +20,15 @@ class RestOwner extends Component {
         this.state = {
             isLoading: true,
             isRestForm: false,
+            isPending: false,
+            isInprogress: false,
+            isDelivered: false,
+            isOrderControll: false,
+            boardName: "",
         }
 
         this.viewFunc = this.viewFunc.bind(this)
+        this.orderViewFunc = this.orderViewFunc.bind(this)
     }
 
     componentDidMount() {
@@ -28,12 +38,59 @@ class RestOwner extends Component {
     }
 
     viewFunc() {
-        const { isRestForm } = this.state;
-        this.setState({ isRestForm: !isRestForm })
+        const { isRestForm, isOrderControll } = this.state;
+
+        this.setState({
+            isOrderControll: false,
+            isRestForm: !isRestForm,
+        })
+    }
+
+    orderViewFunc(name) {
+        const {
+            isRestForm,
+            isPending, isInprogress,
+            isDelivered, boardName,
+        } = this.state;
+
+        if (name === "Pending") {
+            this.setState({
+                isInprogress: false,
+                isDelivered: false,
+                isOrderControll: true,
+                isRestForm: false,
+                isPending: true, boardName: "Pending Orders"
+            })
+        } else if (name === 'Inprogress') {
+            this.setState({
+                isPending: false,
+                isDelivered: false,
+                isOrderControll: true,
+                isRestForm: false,
+                isInprogress: true, boardName: "In Progress Orders"
+            })
+        } else {
+            this.setState({
+                isPending: false,
+                isInprogress: false,
+                isOrderControll: true,
+                isRestForm: false,
+                isDelivered: true, boardName: "Delivered Orders"
+            })
+        }
+
+
+
     }
 
     render() {
-        const { isLoading, isRestForm } = this.state;
+        const {
+            isLoading, isRestForm,
+            isPending, isInprogress,
+            isDelivered, boardName,
+            isOrderControll,
+        } = this.state;
+
         return (
             <div>
                 {
@@ -44,23 +101,29 @@ class RestOwner extends Component {
                                     {isRestForm && <div> <InfoForm>
                                         <Typography variant="h5" component="h3">Resturant Information Form</Typography>
                                         <RestInfoInputForm />
-                                    </InfoForm>
+                                        </InfoForm>
                                         <br />
                                         <InfoForm>
                                             <Typography variant="h5" component="h3">Add Dishses</Typography>
                                             <AddDishInputForm />
                                         </InfoForm> </div>}
-                                        
-                                        {/* {Resturen Order } */}
-                                        {true && <div> <InfoForm>
+
+                                    {/* {Resturen Order } */}
+                                    {isOrderControll && <div>
+                                        <InfoForm>
                                             <center>
-                                        <Typography variant="h5" component="h3">Orders Dashboard</Typography>
-                                        </center>
-                    
-                                        <Orders />
-                                        
+                                                <Typography variant="h5" component="h3">{boardName}</Typography>
+                                            </center>
+
+                                            {isPending && <PendingOrders />}
+
+                                            {isInprogress && <Inprogress />}
+
+                                            {isDelivered && <Delivered />}
+
                                         </InfoForm>
-                                        </div>}
+                                    </div>
+                                    }
 
                                 </div>
                             }>
@@ -78,13 +141,19 @@ class RestOwner extends Component {
                             />
 
                             <TabsItem
-                                myfunc={() => { alert("Progress") }}
+                                myfunc={() => { this.orderViewFunc('Pending') }}
                                 myIcon={'fas fa-handshake'}
+                                tabName={'Pendding'}
+                            />
+
+                            <TabsItem
+                                myfunc={() => { this.orderViewFunc('Inprogress') }}
+                                myIcon={'fab fa-accusoft'}
                                 tabName={'Progress'}
                             />
 
                             <TabsItem
-                                myfunc={() => { alert("Dliverled") }}
+                                myfunc={() => { this.orderViewFunc("Dliverled") }}
                                 myIcon={'fas fa-shipping-fast'}
                                 tabName={'Dliverled'}
                             />

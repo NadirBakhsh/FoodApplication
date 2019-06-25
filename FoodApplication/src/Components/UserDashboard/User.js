@@ -4,6 +4,12 @@ import Appbar from '../AppBar/Appbar'
 import Loader from "../Loader/Loader"
 import TabsItem from '../AppBar/TabsItem'
 import {logout} from '../../config/firebase'
+import InfoForm from '../InfoAdd/InfoAddForm'
+import Typography from '@material-ui/core/Typography';
+import UserInfoForm from './CellectUserInfo'
+
+
+
 class User extends Component {
     constructor(props) {
         super(props);
@@ -26,7 +32,18 @@ class User extends Component {
         return (
             <div>
                 {isLoading ? <Loader /> :
-                    <Appbar userName={"Welcome " + this.props.user.firstName}>
+                    <Appbar userName={"Welcome " + this.props.user.firstName}
+
+                    InfoForm={
+                        <div>
+                            <InfoForm>
+                            <Typography variant="h5" component="h3">Add User Info</Typography>
+                                <UserInfoForm />
+                            </InfoForm>
+                        </div>
+                    }
+                    
+                    >
 
                         <TabsItem
                             myfunc={() => { alert('User Info') }}
