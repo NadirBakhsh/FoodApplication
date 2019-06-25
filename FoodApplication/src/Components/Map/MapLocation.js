@@ -30,12 +30,13 @@ class MapLocation extends Component {
     
 
     locationUpdate() {
+        const ac = this.props.accountType;
         navigator.geolocation.getCurrentPosition((location) => {
           const locationObject = {
                 lat: location.coords.latitude,
                 lng: location.coords.longitude
             }
-            addLocation(locationObject)
+            addLocation(ac,locationObject)
         });
     }
 

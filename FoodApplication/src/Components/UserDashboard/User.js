@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import Appbar from '../AppBar/Appbar'
 import Loader from "../Loader/Loader"
 import TabsItem from '../AppBar/TabsItem'
-import {logout} from '../../config/firebase'
+import { logout } from '../../config/firebase'
 import InfoForm from '../InfoAdd/InfoAddForm'
 import Typography from '@material-ui/core/Typography';
 import UserInfoForm from './CellectUserInfo'
-
+import RestLists from '../Rest_dish_Lists/RestLists'
 
 
 class User extends Component {
@@ -16,7 +16,10 @@ class User extends Component {
 
         this.state = {
             isLoading: true,
+            isUserinfoForm:false,
         }
+
+        this.userInfoFormFunc = this.userInfoFormFunc.bind(this) 
     }
 
     componentDidMount() {
@@ -24,29 +27,60 @@ class User extends Component {
             this.setState({ isLoading: false })
         }, 1500);
     }
+
+userInfoFormFunc(){
+    const { 
+        isLoading , isUserinfoForm
+    } = this.state;
     
- 
+    this.setState({
+        isUserinfoForm : !isUserinfoForm
+    })
+}
+
+
     render() {
-        const { isLoading } = this.state;
+        const { 
+            isLoading,isUserinfoForm,
+            userInfoFormFunc,
+        
+        } = this.state;
 
         return (
             <div>
                 {isLoading ? <Loader /> :
                     <Appbar userName={"Welcome " + this.props.user.firstName}
 
-                    InfoForm={
-                        <div>
-                            <InfoForm>
-                            <Typography variant="h5" component="h3">Add User Info</Typography>
-                                <UserInfoForm />
-                            </InfoForm>
-                        </div>
-                    }
-                    
+                        InfoForm={
+                            <div>  
+                                {isUserinfoForm && <div>
+                                    <InfoForm>
+                                        <Typography variant="h5" component="h3">Add User Info</Typography>
+                                        <UserInfoForm />
+                                    </InfoForm>
+                                </div>}
+                                
+                                <div>
+                                <InfoForm>
+                                    <center>
+                                        <u>
+                                        <Typography variant="h5" component="h3">Resturants List </Typography>
+                                        </u>
+                                        <br/>
+                                        
+                                        <RestLists />
+
+                                    </center>
+                                </InfoForm>
+                                </div>
+
+                            </div>
+                        }
+
                     >
 
                         <TabsItem
-                            myfunc={() => { alert('User Info') }}
+                            myfunc={() => { this.userInfoFormFunc() }}
                             myIcon={'fas fa-user-cog'}
                             tabName={'User Info'}
                         />
@@ -58,9 +92,9 @@ class User extends Component {
                         />
 
                         <TabsItem
-                            myfunc={() => { alert("My Restaurants") }}
+                            myfunc={() => { alert("My Requests") }}
                             myIcon={'fas fa-concierge-bell'}
-                            tabName={'My Restaurants'}
+                            tabName={'My Requests'}
                         />
 
                         <TabsItem
@@ -71,7 +105,7 @@ class User extends Component {
 
 
                     </Appbar>
-}
+                }
 
                 {/* <br/><br/>     
              {"this account Type" + this.props.user.accountType}

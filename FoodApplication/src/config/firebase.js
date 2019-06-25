@@ -83,7 +83,7 @@ function login(email, password) {
 
 }
 
-
+/// Resturant Info saver func
 function AddInfo(img, RestInfo) {
   var userId = firebase.auth().currentUser.uid;
   console.log(img, RestInfo)
@@ -112,10 +112,35 @@ function AddInfo(img, RestInfo) {
    db.ref('RestInfo/' + userId).set(RestInfo)
 }
 
-function addLocation(location){
+
+/// User Info saver func
+function userAddInfo(img, userInfo) {
   var userId = firebase.auth().currentUser.uid;
-  db.ref('location/').child("rest/" + userId).set(location) 
+  console.log(img, userInfo)
+  storageRef.child(`images/${img.name}`).put(img)
+  .then((snapshot)=>{
+    snapshot.ref.getDownloadURL()
+    .then((snapUrl)=>{
+         userInfo.imageUrlProfile = snapUrl; 
+         db.ref('userInfo/' + userId).set(userInfo) 
+    })
+  })
+   db.ref('userInfo/' + userId).set(userInfo)
+  //console.log(img)
 }
+
+
+function addLocation(ac,location){
+  var userId = firebase.auth().currentUser.uid;
+  if(ac === 'User'){
+  db.ref('location/').child("User/" + userId).set(location) 
+} else{
+  db.ref('location/').child("rest/" + userId).set(location) 
+}}
+
+
+
+
 
 function addDish(dishImg,RestDishesData) {
   var userId = firebase.auth().currentUser.uid;
@@ -155,5 +180,6 @@ export {
   logout,
   addDish,
   AddInfo,
+  userAddInfo,
   addLocation,
 }
