@@ -22,6 +22,8 @@ var db = firebase.database();
 var storageRef = firebase.storage().ref();
 
 
+
+
 // Registration function
 function registration(email, password, userData) {
   firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -91,25 +93,25 @@ function AddInfo(img, RestInfo) {
     if (i !== 0) {
       console.log(i, "cert")
       storageRef.child(`images/${img[0].name}`).put(img[0])
-      .then((snapshot)=>{
-        snapshot.ref.getDownloadURL()
-        .then((snapUrl)=>{
-             RestInfo.imageUrlCerti = snapUrl; 
-             db.ref('RestInfo/' + userId).set(RestInfo) 
+        .then((snapshot) => {
+          snapshot.ref.getDownloadURL()
+            .then((snapUrl) => {
+              RestInfo.imageUrlCerti = snapUrl;
+              db.ref('RestInfo/' + userId).set(RestInfo)
+            })
         })
-      })
     } else {
       console.log(i, "profile")
-        storageRef.child(`images/${img[1].name}`).put(img[1])
-    .then((snapshot)=>{
-      snapshot.ref.getDownloadURL()
-      .then((snapUrl)=>{
-           RestInfo.imageUrlProfile = snapUrl;  
-      })
-    })
+      storageRef.child(`images/${img[1].name}`).put(img[1])
+        .then((snapshot) => {
+          snapshot.ref.getDownloadURL()
+            .then((snapUrl) => {
+              RestInfo.imageUrlProfile = snapUrl;
+            })
+        })
     }
   }
-   db.ref('RestInfo/' + userId).set(RestInfo)
+  db.ref('RestInfo/' + userId).set(RestInfo)
 }
 
 
@@ -118,48 +120,40 @@ function userAddInfo(img, userInfo) {
   var userId = firebase.auth().currentUser.uid;
   console.log(img, userInfo)
   storageRef.child(`images/${img.name}`).put(img)
-  .then((snapshot)=>{
-    snapshot.ref.getDownloadURL()
-    .then((snapUrl)=>{
-         userInfo.imageUrlProfile = snapUrl; 
-         db.ref('userInfo/' + userId).set(userInfo) 
+    .then((snapshot) => {
+      snapshot.ref.getDownloadURL()
+        .then((snapUrl) => {
+          userInfo.imageUrlProfile = snapUrl;
+          db.ref('userInfo/' + userId).set(userInfo)
+        })
     })
-  })
-   db.ref('userInfo/' + userId).set(userInfo)
+  db.ref('userInfo/' + userId).set(userInfo)
   //console.log(img)
 }
 
 
-function addLocation(ac,location){
+function addLocation(ac, location) {
   var userId = firebase.auth().currentUser.uid;
-  if(ac === 'User'){
-  db.ref('location/').child("User/" + userId).set(location) 
-} else{
-  db.ref('location/').child("rest/" + userId).set(location) 
-}}
-
-
-
-
-
-function addDish(dishImg,RestDishesData) {
-  var userId = firebase.auth().currentUser.uid;
-  storageRef.child(`DishImages/${dishImg.name}`).put(dishImg)
-  .then((snapshot)=>{
-    snapshot.ref.getDownloadURL()
-    .then((snapUrl)=>{
-      RestDishesData.imageUrl = snapUrl;
-      db.ref("RestDishes/" + userId).push(RestDishesData)
-    })
-  })
- 
+  if (ac === 'User') {
+    db.ref('location/').child("User/" + userId).set(location)
+  } else {
+    db.ref('location/').child("rest/" + userId).set(location)
+  }
 }
 
 
+function addDish(dishImg, RestDishesData) {
+  var userId = firebase.auth().currentUser.uid;
+  storageRef.child(`DishImages/${dishImg.name}`).put(dishImg)
+    .then((snapshot) => {
+      snapshot.ref.getDownloadURL()
+        .then((snapUrl) => {
+          RestDishesData.imageUrl = snapUrl;
+          db.ref("RestDishes/" + userId).push(RestDishesData)
+        })
+    })
 
-
-
-
+}
 function logout(props) {
   firebase.auth().signOut().then(function () {
     // Sign-out successful.
@@ -172,6 +166,64 @@ function logout(props) {
 }
 
 
+//////////////<<<<<<<<<<<>>>>>>>>>>>>>>>>>>////// Geting Data Function\\\\\\\\<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+var productArray = [];
+
+function getDishes(userId) {
+  productArray = [];
+  return new Promise((resolve, reject) => {
+    db.ref('RestDishes/').once("value")
+      .then(res => res.val())
+      .then(res => {
+        for (var key in res) {
+          const dishesList = res[key]
+          for (var listkey in dishesList) {
+
+            productArray.push(dishesList[listkey])
+            dishesList[listkey].rest_uid = key;
+            dishesList[listkey].dish_uid = listkey;
+            console.log(productArray, "<<<<<<<<<<<<<<")
+          }
+
+        }
+      }).then(() => {
+        resolve(productArray)
+      }).catch(e => {
+        reject({ message: e })
+      })
+  })
+}
+
+
+
+//Get Resturant Info and it's Dishes in indival
+
+// var restInfoDishes = [];
+
+// function getRestInfoDishes(rest_uid, food_id) {
+//   restInfoDishes = [];
+//   // return new Promise((resolve, reject) => {
+//   //     db.ref(`RestInfo/${rest_uid}`).once("value")
+//   //     .then(res => res.val())
+//   //     .then((res) => {
+
+//   //       restInfoDishes.push(res)
+//   //        console.log(restInfoDishes,",,,,,,,,,,,,")
+//   //     }).catch(e => {
+//   //       reject({ message: e })
+//   //     })
+      
+//   //   })
+//      console.log(rest_uid, food_id)
+
+// }
+
+
+
+
+
+
 export {
   registration,
   getResturantName,
@@ -182,4 +234,7 @@ export {
   AddInfo,
   userAddInfo,
   addLocation,
+  getDishes,
+ // getRestInfoDishes,
+
 }

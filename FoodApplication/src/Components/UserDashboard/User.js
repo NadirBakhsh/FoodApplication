@@ -6,9 +6,13 @@ import TabsItem from '../AppBar/TabsItem'
 import { logout } from '../../config/firebase'
 import InfoForm from '../InfoAdd/InfoAddForm'
 import Typography from '@material-ui/core/Typography';
-import UserInfoForm from './CellectUserInfo'
-import RestLists from '../Rest_dish_Lists/RestLists'
+import UserInfoForm from '../UserDashboard/CellectUserInfo'
+import Card from './ProductCart'
+import Divider from '@material-ui/core/Divider';
+import Chip from '@material-ui/core/Chip';
+import DetailScreen from './Detailscreen'
 
+import {getDishes,getRestInfoDishes} from '../../config/firebase'
 
 class User extends Component {
     constructor(props) {
@@ -16,63 +20,157 @@ class User extends Component {
 
         this.state = {
             isLoading: true,
-            isUserinfoForm:false,
+            isUserinfoForm: false,
+            foodArray : [],
+            chipArray : ['Kima','Pizza', 'Biryani'],
+            text : "",
+           
         }
-
-        this.userInfoFormFunc = this.userInfoFormFunc.bind(this) 
+        this.fatchingDishes = this.fatchingDishes.bind(this)
+     
     }
 
     componentDidMount() {
+        
         setTimeout(() => {
             this.setState({ isLoading: false })
-        }, 1500);
+        }, 200);
+
+        this.fatchingDishes()
     }
 
-userInfoFormFunc(){
-    const { 
-        isLoading , isUserinfoForm
-    } = this.state;
-    
-    this.setState({
-        isUserinfoForm : !isUserinfoForm
-    })
-}
+  
+    userInfoFormFunc() {
+        const {
+            isLoading, isUserinfoForm
+        } = this.state;
+
+        this.setState({
+            isUserinfoForm: !isUserinfoForm
+        })
+    }
+
+
+    async fatchingDishes(){
+        try{
+            const getingdish = await getDishes()
+            this.setState({
+                foodArray : getingdish 
+            })
+           console.log(getingdish)
+        }catch (e){
+            console.log(e)
+        }
+    }
+
+
+   async search(e) {
+        const { foodArray } = this.state;
+        const text = e.target.value;
+        
+        const result = await foodArray.filter((elem) => {
+        return elem.dishname.substring(0,text.length).toLowerCase() === (text.toLowerCase())
+        })
+
+      this.setState({result, text});
+    }
+
+    async  handleClick(chipText){
+        const { foodArray } = this.state;
+        const text = chipText;
+        
+        const result = await foodArray.filter((elem) => {
+        return elem.dishname.substring(0,text.length).toLowerCase() === (text.toLowerCase())
+        })
+
+      this.setState({result, text});
+    }
+
+
+    handleDetailScreen(rest_uid){
+        var Rest_Info_Dishes = [];
+        Rest_Info_Dishes.push(rest_uid)
+        Rest_Info_Dishes.map((e,i)=>{
+            if(i < 1){
+                console.log("nadir")
+            }
+        })
+        
+
+    }
 
 
     render() {
-        const { 
-            isLoading,isUserinfoForm,
-            userInfoFormFunc,
-        
+        const {
+            isLoading, isUserinfoForm,foodArray,result,text,chipArray
         } = this.state;
+
+        const arr = text.length ? result : foodArray;
+
+       
 
         return (
             <div>
                 {isLoading ? <Loader /> :
                     <Appbar userName={"Welcome " + this.props.user.firstName}
-
                         InfoForm={
-                            <div>  
+                            <div>
+                            
                                 {isUserinfoForm && <div>
                                     <InfoForm>
                                         <Typography variant="h5" component="h3">Add User Info</Typography>
                                         <UserInfoForm />
                                     </InfoForm>
                                 </div>}
-                                
-                                <div>
                                 <InfoForm>
                                     <center>
-                                        <u>
-                                        <Typography variant="h5" component="h3">Resturants List </Typography>
-                                        </u>
-                                        <br/>
-                                        
-                                        <RestLists />
+                                    <Typography style={{marginBottom:'6px'}} variant="h5" component="h3">Resturant's Menus List </Typography>
+                                <Divider style={{marginBottom:'8px'}} />
+                                <div style={{display: 'flex',flexWrap: 'wrap' , flexDirection:'row', justifyContent:'space-between'}}>
+                                  
+                                 <input style={{width:'300px'}} value={text}  placeholder='Search...'  onChange={this.search.bind(this)}/>
+                                <div>
+                                <Chip style={{width:'90px'}} variant="outlined" color="primary" 
+                                         label={"All Items"}   
+                                         onClick={()=>{this.handleClick("")}}
+                                    />
 
-                                    </center>
-                                </InfoForm>
+                                    {chipArray.map((item,index)=>{
+                                        return (<div style={{display:'inline-block' }}>
+                                                <Chip style={{width:'60px'}} variant="outlined" color="primary" 
+                                         key={item}   
+                                         label={item}   
+                                         onClick={()=>{this.handleClick(item)}}
+                                    />
+                                        </div>)
+                                    })}
+                                    </div>
                                 </div>
+                                
+
+
+                                <Divider style={{marginTop:'8px'}} />
+                                    </center>
+
+                                <div style={{display: 'flex',flexWrap: 'wrap', flexDirection:'row',justifyContent:'space-around',marginTop:'20px'}}> 
+                                                                
+                                  {
+                                   arr.map((item,index)=>{
+                                       return(  <div style={{marginTop:'15px'}}><Card 
+                                       
+                                       key={item.dish_uid}
+                                        dishName={item.dishname} 
+                                        price={'Rs' + item.amount} 
+                                        imgUrl={item.imageUrl} 
+                                        addToCard={<DetailScreen 
+                                         onClick={this.handleDetailScreen(item.dish_uid)} 
+                                        />} 
+                                         /></div>)
+                                   })            
+                                 }
+
+                                 </div>
+                                </InfoForm>
 
                             </div>
                         }

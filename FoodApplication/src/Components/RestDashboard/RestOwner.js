@@ -34,7 +34,7 @@ class RestOwner extends Component {
     componentDidMount() {
         setTimeout(() => {
             this.setState({ isLoading: false })
-        }, 500);
+        }, 0);
     }
 
     viewFunc() {

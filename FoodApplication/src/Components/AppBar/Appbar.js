@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import Sreach from '../UserDashboard/Sreach'
 
 import './bar.css'
 const drawerWidth = 240;
@@ -117,6 +118,9 @@ export default function MiniDrawer(props) {
             {props.userName}
 
           </Typography>
+
+            <Sreach />
+
         </Toolbar>
       </AppBar>
       <Drawer

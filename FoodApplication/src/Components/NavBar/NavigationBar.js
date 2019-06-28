@@ -11,7 +11,7 @@ class NavigationBar extends Component {
                           
                 <button className="but-login btn button:hover" onClick={() => this.props.history.push('/Login')} >Login</button>
                 <button className="but-signup"  onClick={() => this.props.history.push('/RegisterForm')} >Sign Up</button> 
-            
+
            </div>
           </div>
         );
