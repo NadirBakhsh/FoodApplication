@@ -11,8 +11,9 @@ import Card from './ProductCart'
 import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
 import DetailScreen from './Detailscreen'
+import Button from '@material-ui/core/Button';
 
-import {getDishes,getRestInfoDishes} from '../../config/firebase'
+import { getDishes, getRestInfoDishes } from '../../config/firebase'
 
 class User extends Component {
     constructor(props) {
@@ -21,17 +22,19 @@ class User extends Component {
         this.state = {
             isLoading: true,
             isUserinfoForm: false,
-            foodArray : [],
-            chipArray : ['Kima','Pizza', 'Biryani'],
-            text : "",
-           
+            foodArray: [],
+            chipArray: ['Kima', 'Pizza', 'Biryani'],
+            text: "",
+            isResturant: false
+
         }
+
         this.fatchingDishes = this.fatchingDishes.bind(this)
-     
+
     }
 
     componentDidMount() {
-        
+
         setTimeout(() => {
             this.setState({ isLoading: false })
         }, 200);
@@ -39,75 +42,87 @@ class User extends Component {
         this.fatchingDishes()
     }
 
-  
+
     userInfoFormFunc() {
         const {
             isLoading, isUserinfoForm
         } = this.state;
 
         this.setState({
-            isUserinfoForm: !isUserinfoForm
+            isUserinfoForm: true,
+            isResturant: false,
+        })
+    }
+
+    isResturantHandle() {
+        const {
+            isLoading, isUserinfoForm, isResturant
+        } = this.state;
+
+        this.setState({
+            isUserinfoForm: false,
+            isResturant: true,
         })
     }
 
 
-    async fatchingDishes(){
-        try{
+    async fatchingDishes() {
+        try {
             const getingdish = await getDishes()
             this.setState({
-                foodArray : getingdish 
+                foodArray: getingdish
             })
-           console.log(getingdish)
-        }catch (e){
+            console.log(getingdish)
+        } catch (e) {
             console.log(e)
         }
     }
 
 
-   async search(e) {
+    async search(e) {
         const { foodArray } = this.state;
         const text = e.target.value;
-        
+
         const result = await foodArray.filter((elem) => {
-        return elem.dishname.substring(0,text.length).toLowerCase() === (text.toLowerCase())
+            return elem.dishname.substring(0, text.length).toLowerCase() === (text.toLowerCase())
         })
 
-      this.setState({result, text});
+        this.setState({ result, text });
     }
 
-    async  handleClick(chipText){
+    async  handleClick(chipText) {
         const { foodArray } = this.state;
         const text = chipText;
-        
+
         const result = await foodArray.filter((elem) => {
-        return elem.dishname.substring(0,text.length).toLowerCase() === (text.toLowerCase())
+            return elem.dishname.substring(0, text.length).toLowerCase() === (text.toLowerCase())
         })
 
-      this.setState({result, text});
+        this.setState({ result, text });
     }
 
 
-    handleDetailScreen(rest_uid){
-        var Rest_Info_Dishes = [];
-        Rest_Info_Dishes.push(rest_uid)
-        Rest_Info_Dishes.map((e,i)=>{
-            if(i < 1){
-                console.log("nadir")
-            }
-        })
-        
+    handleDetailScreen(rest_uid) {
+        // var Rest_Info_Dishes = [];
+        // Rest_Info_Dishes.push(rest_uid)
+        // Rest_Info_Dishes.map((e,i)=>{
+        // return (console.log(rest_uid,"jjjjjjjjjj"))
+        // })
+
+
 
     }
 
 
     render() {
         const {
-            isLoading, isUserinfoForm,foodArray,result,text,chipArray
+            isLoading, isUserinfoForm, foodArray, result, text, chipArray,
+            isResturant,
         } = this.state;
 
         const arr = text.length ? result : foodArray;
 
-       
+
 
         return (
             <div>
@@ -115,62 +130,74 @@ class User extends Component {
                     <Appbar userName={"Welcome " + this.props.user.firstName}
                         InfoForm={
                             <div>
-                            
+
                                 {isUserinfoForm && <div>
                                     <InfoForm>
                                         <Typography variant="h5" component="h3">Add User Info</Typography>
                                         <UserInfoForm />
                                     </InfoForm>
                                 </div>}
-                                <InfoForm>
+                                {isResturant && <InfoForm>
                                     <center>
-                                    <Typography style={{marginBottom:'6px'}} variant="h5" component="h3">Resturant's Menus List </Typography>
-                                <Divider style={{marginBottom:'8px'}} />
-                                <div style={{display: 'flex',flexWrap: 'wrap' , flexDirection:'row', justifyContent:'space-between'}}>
-                                  
-                                 <input style={{width:'300px'}} value={text}  placeholder='Search...'  onChange={this.search.bind(this)}/>
-                                <div>
-                                <Chip style={{width:'90px'}} variant="outlined" color="primary" 
-                                         label={"All Items"}   
-                                         onClick={()=>{this.handleClick("")}}
-                                    />
+                                        <Typography style={{ marginBottom: '6px' }} variant="h5" component="h3">Resturant's Menus List </Typography>
+                                        <Divider style={{ marginBottom: '8px' }} />
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'space-between' }}>
 
-                                    {chipArray.map((item,index)=>{
-                                        return (<div style={{display:'inline-block' }}>
-                                                <Chip style={{width:'60px'}} variant="outlined" color="primary" 
-                                         key={item}   
-                                         label={item}   
-                                         onClick={()=>{this.handleClick(item)}}
-                                    />
-                                        </div>)
-                                    })}
-                                    </div>
-                                </div>
-                                
+                                            <input style={{ width: '300px' }} value={text} placeholder='Search...' onChange={this.search.bind(this)} />
+                                            <div>
+                                                <Chip style={{ width: '90px' }} variant="outlined" color="primary"
+                                                    label={"All Items"}
+                                                    onClick={() => { this.handleClick("") }}
+                                                />
+
+                                                {chipArray.map((item, index) => {
+                                                    return (<div style={{ display: 'inline-block' }}>
+                                                        <Chip style={{ width: '60px' }} variant="outlined" color="primary"
+                                                            key={item}
+                                                            label={item}
+                                                            onClick={() => { this.handleClick(item) }}
+                                                        />
+                                                    </div>)
+                                                })}
+                                            </div>
+                                        </div>
 
 
-                                <Divider style={{marginTop:'8px'}} />
+
+                                        <Divider style={{ marginTop: '8px' }} />
                                     </center>
 
-                                <div style={{display: 'flex',flexWrap: 'wrap', flexDirection:'row',justifyContent:'space-around',marginTop:'20px'}}> 
-                                                                
-                                  {
-                                   arr.map((item,index)=>{
-                                       return(  <div style={{marginTop:'15px'}}><Card 
-                                       
-                                       key={item.dish_uid}
-                                        dishName={item.dishname} 
-                                        price={'Rs' + item.amount} 
-                                        imgUrl={item.imageUrl} 
-                                        addToCard={<DetailScreen 
-                                         onClick={this.handleDetailScreen(item.dish_uid)} 
-                                        />} 
-                                         /></div>)
-                                   })            
-                                 }
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'space-around', marginTop: '20px' }}>
 
-                                 </div>
-                                </InfoForm>
+                                        {
+                                            arr.map((item, index) => {
+                                                return (<div style={{ marginTop: '15px' }}><Card
+
+                                                    key={item.dish_uid}
+                                                    dishName={item.dishname}
+                                                    price={'Rs' + item.amount}
+                                                    imgUrl={item.imageUrl}
+                                                    addToCard={<DetailScreen >
+                                                       <div style={{margin:"70px"}}>
+                                                        <Card                                                        
+                                                            dishName={item.dishname}
+                                                            price={'Rs' + item.amount}
+                                                            imgUrl={item.imageUrl}
+                                                            addToCard={<Button variant="contained" color="primary" style={{ float: 'right', margin: '-20px 0px 0px 0px',position:'relative'}}
+                                                            onClick={()=>{alert("")}}
+                                                            >
+                                                                Buy{' - '} <i className="fas fa-cart-plus" style={{fontSize:'15px',}}></i>
+                                                             </Button>}
+                                                        />
+                                                        </div>
+                                                    </DetailScreen>}
+
+                                                /></div>)
+                                            })
+                                        }
+
+                                    </div>
+                                </InfoForm>}
 
                             </div>
                         }
@@ -184,7 +211,7 @@ class User extends Component {
                         />
 
                         <TabsItem
-                            myfunc={() => { alert("Restaurants") }}
+                            myfunc={() => { this.isResturantHandle() }}
                             myIcon={'fas fa-utensils'}
                             tabName={'Restaurants'}
                         />

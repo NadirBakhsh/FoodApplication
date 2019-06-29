@@ -27,7 +27,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog() {
+export default function FullScreenDialog(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -41,7 +41,7 @@ export default function FullScreenDialog() {
 
   return (
     <div>
-      <Button variant="contained" color="secondary"  style={{ float: 'right', margin: '-40px 0px 0px 0px',position:'relative'} } onClick={handleClickOpen}>
+      <Button variant="contained" color="secondary"  style={{ float: 'right', margin: '-40px 0px 0px 0px',position:'relative'}} onClick={handleClickOpen}>
         Order
       </Button>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -59,9 +59,7 @@ export default function FullScreenDialog() {
           </Toolbar>
         </AppBar>
     
-        {/* Container */}
-
-        {/* Container Close */}
+      {props.children}
       
       </Dialog>
     </div>
