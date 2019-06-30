@@ -14,6 +14,8 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 
+
+
 const useStyles1 = makeStyles(theme => ({
   root: {
     flexShrink: 0,
@@ -24,6 +26,11 @@ const useStyles1 = makeStyles(theme => ({
     fontSize:'12px',
   },
 }));
+
+
+
+
+
 
 function TablePaginationActions(props) {
   const classes = useStyles1();

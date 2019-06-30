@@ -37,8 +37,14 @@ export default function FullScreenDialog(props) {
 
   function handleClose() {
     setOpen(false);
+    clearOrderArray();
   }
-
+  
+  function clearOrderArray(){ 
+    props.orderDrop()
+  }
+  
+  
   return (
     <div>
       <Button variant="contained" color="secondary"  style={{ float: 'right', margin: '-40px 0px 0px 0px',position:'relative'}} onClick={handleClickOpen}>
@@ -53,7 +59,7 @@ export default function FullScreenDialog(props) {
             <Typography style={{cursor:'point'}} onClick={handleClose} variant="h6" className={classes.title}>
              Cancel
             </Typography>
-            <Button color="inherit" onClick={handleClose}>
+            <Button color="inherit" onClick={()=>{props.saveOrder();handleClose()}}>
               ORDER NOW
             </Button>
           </Toolbar>

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Appbar from '../AppBar/Appbar'
 import Loader from "../Loader/Loader"
 import TabsItem from '../AppBar/TabsItem'
-import { logout } from '../../config/firebase'
+import { logout,orderBooked } from '../../config/firebase'
 import InfoForm from '../InfoAdd/InfoAddForm'
 import Typography from '@material-ui/core/Typography';
 import UserInfoForm from '../UserDashboard/CellectUserInfo'
@@ -12,8 +12,9 @@ import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
 import DetailScreen from './Detailscreen'
 import Button from '@material-ui/core/Button';
+ 
 
-import { getDishes, getRestInfoDishes } from '../../config/firebase'
+import { getDishes } from '../../config/firebase'
 
 class User extends Component {
     constructor(props) {
@@ -25,7 +26,9 @@ class User extends Component {
             foodArray: [],
             chipArray: ['Kima', 'Pizza', 'Biryani'],
             text: "",
-            isResturant: false
+            isResturant: true,
+            orders: [],
+            orderObj: {},
 
         }
 
@@ -90,6 +93,7 @@ class User extends Component {
         this.setState({ result, text });
     }
 
+
     async  handleClick(chipText) {
         const { foodArray } = this.state;
         const text = chipText;
@@ -102,23 +106,64 @@ class User extends Component {
     }
 
 
-    handleDetailScreen(rest_uid) {
-        // var Rest_Info_Dishes = [];
-        // Rest_Info_Dishes.push(rest_uid)
-        // Rest_Info_Dishes.map((e,i)=>{
-        // return (console.log(rest_uid,"jjjjjjjjjj"))
-        // })
+    //////////////
+
+    // Constructor function for Person objects
+
+    // export default Order(name,price) {
+    //     this.dishName = name;
+    //     this.amount = price;   
+
+    //     console.log(obj)
+    // }
+
+    onClickValue = (rest_uid, dishname, amount) => {
+        amount = parseInt(amount);
+        this.setState({ orderObj: { rest_uid, dishname, amount } });
+        this.onAddOrder()
+    };
 
 
+    onAddOrder = () => {
+        // not allowed AND not working
+        this.setState(state => {
+            const Orders = state.orders.push(state.orderObj);
 
+            return {
+                Orders,
+                orderObj: '',
+            };
+        });
+    };
+
+
+    
+    onCancelOreder = () => {
+        this.setState({orders : [] })
+        alert('nadir from user')
     }
+    
+    
+    onSaveOrder = () => {
+        const {orders} = this.state
+        orders.map((item)=>{
+            return (orderBooked(item))
+            
+        })
+    }
+    
 
+
+    /////////////
 
     render() {
         const {
             isLoading, isUserinfoForm, foodArray, result, text, chipArray,
-            isResturant,
+            isResturant, orders,
         } = this.state;
+
+
+        console.log(orders, "Order working user")
 
         const arr = text.length ? result : foodArray;
 
@@ -177,18 +222,21 @@ class User extends Component {
                                                     dishName={item.dishname}
                                                     price={'Rs' + item.amount}
                                                     imgUrl={item.imageUrl}
-                                                    addToCard={<DetailScreen >
-                                                       <div style={{margin:"70px"}}>
-                                                        <Card                                                        
-                                                            dishName={item.dishname}
-                                                            price={'Rs' + item.amount}
-                                                            imgUrl={item.imageUrl}
-                                                            addToCard={<Button variant="contained" color="primary" style={{ float: 'right', margin: '-20px 0px 0px 0px',position:'relative'}}
-                                                            onClick={()=>{alert("")}}
-                                                            >
-                                                                Buy{' - '} <i className="fas fa-cart-plus" style={{fontSize:'15px',}}></i>
-                                                             </Button>}
-                                                        />
+                                                    addToCard={<DetailScreen
+                                                        orderDrop={this.onCancelOreder}
+                                                        saveOrder={this.onSaveOrder}
+                                                    >
+                                                        <div style={{ margin: "70px" }}>
+                                                            <Card
+                                                                dishName={item.dishname}
+                                                                price={'Rs' + item.amount}
+                                                                imgUrl={item.imageUrl}
+                                                                addToCard={<Button variant="contained" color="primary" style={{ float: 'right', margin: '-20px 0px 0px 0px', position: 'relative' }}
+                                                                    onClick={() => { this.onClickValue(item.rest_uid, item.dishname, item.amount) }}
+                                                                >
+                                                                    Buy{' - '} <i className="fas fa-cart-plus" style={{ fontSize: '15px', }}></i>
+                                                                </Button>}
+                                                            />
                                                         </div>
                                                     </DetailScreen>}
 

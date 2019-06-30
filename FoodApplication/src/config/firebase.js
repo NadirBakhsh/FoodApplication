@@ -1,5 +1,7 @@
 import * as firebase from 'firebase';
 
+
+
 // Your web app's Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyCIlXs3ooV8J0RlymlkSJjqFAeIVlgU5OY",
@@ -170,7 +172,8 @@ function logout(props) {
 
 var productArray = [];
 
-function getDishes(userId) {
+function getDishes() {
+
   productArray = [];
   return new Promise((resolve, reject) => {
     db.ref('RestDishes/').once("value")
@@ -179,10 +182,10 @@ function getDishes(userId) {
         for (var key in res) {
           const dishesList = res[key]
           for (var listkey in dishesList) {
-
             productArray.push(dishesList[listkey])
             dishesList[listkey].rest_uid = key;
-            dishesList[listkey].dish_uid = listkey;
+            dishesList[listkey].dish_id = listkey;
+
             console.log(productArray, "<<<<<<<<<<<<<<")
           }
 
@@ -197,27 +200,63 @@ function getDishes(userId) {
 
 
 
-//Get Resturant Info and it's Dishes in indival
+////////////////////////////////// Ordered Booked By user
 
-// var restInfoDishes = [];
+function orderBooked(orderObj) {
+  var userId = firebase.auth().currentUser.uid;
+  return new Promise((resolve, reject) => {
+    db.ref('users/').once("value")
+      .then(res => res.val())
+      .then(res => {
+        for (var key in res) {
+          if (key === userId) {
+            orderObj.firstName = res[key].firstName
+            orderObj.lastName = res[key].lastName
+            orderObj.email = res[key].email
+            console.log(orderObj)
+          }
+        }
+      }).then(() => {
+        db.ref('userInfo/').once("value")
+          .then(res => res.val())
+          .then((res) => {
+            for (var key2 in res) {
+              if (key2 === userId) {
+                orderObj.contact = res[key2].contact
+                orderObj.country = res[key2].country
+                orderObj.city = res[key2].city
+                console.log(res[key2])
+              }
+            } 
+          })
+          .then(() => {
+            orderObj.user_uid = userId;
+            db.ref(`orders/pendding/${orderObj.rest_uid}/`).push(orderObj)
 
-// function getRestInfoDishes(rest_uid, food_id) {
-//   restInfoDishes = [];
-//   // return new Promise((resolve, reject) => {
-//   //     db.ref(`RestInfo/${rest_uid}`).once("value")
-//   //     .then(res => res.val())
-//   //     .then((res) => {
+          })
+      })
+   // console.log("data has reached in fire base", orderObj)
+  });
+}
 
-//   //       restInfoDishes.push(res)
-//   //        console.log(restInfoDishes,",,,,,,,,,,,,")
-//   //     }).catch(e => {
-//   //       reject({ message: e })
-//   //     })
+
+/////////////////////// order get From Pendding node
+function getPenddingOrder(){
+  var userId = firebase.auth().currentUser.uid;
+
+  return new Promise((resolve, reject) => {
+    db.ref(`orders/pendding/`).once("value")
+      .then(res => res.val())
+      .then((res)=>{
+        
+            resolve(res)
       
-//   //   })
-//      console.log(rest_uid, food_id)
+      }).catch(e =>{
+        reject({message : e})
+      })
+    })
+}
 
-// }
 
 
 
@@ -235,6 +274,13 @@ export {
   userAddInfo,
   addLocation,
   getDishes,
- // getRestInfoDishes,
+  orderBooked,
+  getPenddingOrder,
+
 
 }
+
+
+
+//// google Map Api key for Get String Adress form
+// AIzaSyDTGKksa-yAJURHWqydkVja02jdh_fRgrc

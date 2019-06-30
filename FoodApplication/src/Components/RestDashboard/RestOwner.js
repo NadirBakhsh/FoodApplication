@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Loader from "../Loader/Loader"
 import Appbar from '../AppBar/Appbar'
 import TabsItem from '../AppBar/TabsItem'
-import { logout } from '../../config/firebase'
+import { logout,getPenddingOrder } from '../../config/firebase'
 import InfoForm from '../InfoAdd/InfoAddForm'
 import Typography from '@material-ui/core/Typography';
 import RestInfoInputForm from '../RestDashboard/InfoCellecetForm'
@@ -11,7 +11,7 @@ import AddDishInputForm from '../RestDashboard/DishForm'
 import PendingOrders from './PendingOrders'
 import Inprogress from './Inprogress'
 import Delivered from './Delivered'
-
+ 
 
 class RestOwner extends Component {
     constructor(props) {
@@ -29,12 +29,14 @@ class RestOwner extends Component {
 
         this.viewFunc = this.viewFunc.bind(this)
         this.orderViewFunc = this.orderViewFunc.bind(this)
+        
     }
 
     componentDidMount() {
         setTimeout(() => {
             this.setState({ isLoading: false })
         }, 0);
+        this.fatchPenddinfOrders()
     }
 
     viewFunc() {
@@ -83,6 +85,16 @@ class RestOwner extends Component {
 
     }
 
+
+   async fatchPenddinfOrders(){
+        try{
+            const  getingPenddingOrders = await getPenddingOrder()
+            console.log(getingPenddingOrders,"perdding Gating")
+        }catch (e){
+
+        }
+    }
+
     render() {
         const {
             isLoading, isRestForm,
@@ -115,7 +127,9 @@ class RestOwner extends Component {
                                                 <Typography variant="h5" component="h3">{boardName}</Typography>
                                             </center>
 
-                                            {isPending && <PendingOrders />}
+                                            {isPending && <PendingOrders 
+                                            
+                                            />}
 
                                             {isInprogress && <Inprogress />}
 
