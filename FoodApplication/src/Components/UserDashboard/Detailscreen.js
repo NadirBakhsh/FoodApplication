@@ -12,6 +12,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
+import SetLocation from './Location'
+
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -40,6 +42,11 @@ export default function FullScreenDialog(props) {
     clearOrderArray();
   }
   
+  function handleMoreOrder() {
+    setOpen(false);
+  
+  }
+
   function clearOrderArray(){ 
     props.orderDrop()
   }
@@ -48,25 +55,34 @@ export default function FullScreenDialog(props) {
   return (
     <div>
       <Button variant="contained" color="secondary"  style={{ float: 'right', margin: '-40px 0px 0px 0px',position:'relative'}} onClick={handleClickOpen}>
-        Order
+        Order 
       </Button>
+
+
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
               <CloseIcon />
             </IconButton>
-            <Typography style={{cursor:'point'}} onClick={handleClose} variant="h6" className={classes.title}>
-             Cancel
+            <Typography style={{cursor:'pointer'}} onClick={handleClose} variant="h6" className={classes.title}>
+             Cancel Order
             </Typography>
+            
+            {props.CardIcon}
+
             <Button color="inherit" onClick={()=>{props.saveOrder();handleClose()}}>
               ORDER NOW
             </Button>
           </Toolbar>
         </AppBar>
-    
+   
+        <SetLocation style={{float:'right'}} />
       {props.children}
+      <Button variant="contained" onClick={handleMoreOrder} style={{width:'283px' , marginLeft:'500px', marginTop:'-500', position:'relative'}} color="secondary">click For More Order</Button>
+ 
       
+
       </Dialog>
     </div>
   );

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Appbar from '../AppBar/Appbar'
 import Loader from "../Loader/Loader"
 import TabsItem from '../AppBar/TabsItem'
-import { logout,orderBooked } from '../../config/firebase'
+import { logout, orderBooked } from '../../config/firebase'
 import InfoForm from '../InfoAdd/InfoAddForm'
 import Typography from '@material-ui/core/Typography';
 import UserInfoForm from '../UserDashboard/CellectUserInfo'
@@ -12,7 +12,8 @@ import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
 import DetailScreen from './Detailscreen'
 import Button from '@material-ui/core/Button';
- 
+import Swal from 'sweetalert2'
+import CardIcon from './AddCardIcon'
 
 import { getDishes } from '../../config/firebase'
 
@@ -108,14 +109,6 @@ class User extends Component {
 
     //////////////
 
-    // Constructor function for Person objects
-
-    // export default Order(name,price) {
-    //     this.dishName = name;
-    //     this.amount = price;   
-
-    //     console.log(obj)
-    // }
 
     onClickValue = (rest_uid, dishname, amount) => {
         amount = parseInt(amount);
@@ -137,21 +130,33 @@ class User extends Component {
     };
 
 
-    
+
     onCancelOreder = () => {
-        this.setState({orders : [] })
-        alert('nadir from user')
+        this.setState({ orders: [] })
+        Swal.fire({
+            position: 'center',
+             title: 'Your Order Canceled and card cleared',
+            showConfirmButton: false,
+            timer: 1500
+          })
     }
-    
-    
+
+
     onSaveOrder = () => {
-        const {orders} = this.state
-        orders.map((item)=>{
+        const { orders } = this.state
+        orders.map((item) => {
             return (orderBooked(item))
-            
+
         })
+        Swal.fire({
+            position: 'center',
+            type: 'success',
+            title: 'Your Order Confirmed',
+            showConfirmButton: false,
+            timer: 1500
+          })
     }
-    
+
 
 
     /////////////
@@ -166,16 +171,12 @@ class User extends Component {
         console.log(orders, "Order working user")
 
         const arr = text.length ? result : foodArray;
-
-
-
         return (
             <div>
                 {isLoading ? <Loader /> :
                     <Appbar userName={"Welcome " + this.props.user.firstName}
                         InfoForm={
                             <div>
-
                                 {isUserinfoForm && <div>
                                     <InfoForm>
                                         <Typography variant="h5" component="h3">Add User Info</Typography>
@@ -206,27 +207,24 @@ class User extends Component {
                                                 })}
                                             </div>
                                         </div>
-
-
-
                                         <Divider style={{ marginTop: '8px' }} />
                                     </center>
-
                                     <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'space-around', marginTop: '20px' }}>
-
                                         {
                                             arr.map((item, index) => {
                                                 return (<div style={{ marginTop: '15px' }}><Card
-
                                                     key={item.dish_uid}
                                                     dishName={item.dishname}
                                                     price={'Rs' + item.amount}
+                                                    restName={item.rest_Name}
                                                     imgUrl={item.imageUrl}
                                                     addToCard={<DetailScreen
                                                         orderDrop={this.onCancelOreder}
                                                         saveOrder={this.onSaveOrder}
+                                                        CardIcon={ <CardIcon badgeContentcounter ={orders.length} />}
                                                     >
-                                                        <div style={{ margin: "70px" }}>
+
+                                                        <div style={{ margin: "50px auto",display:'flex', justifyItems:'space-between',  }}>
                                                             <Card
                                                                 dishName={item.dishname}
                                                                 price={'Rs' + item.amount}
@@ -236,8 +234,12 @@ class User extends Component {
                                                                 >
                                                                     Buy{' - '} <i className="fas fa-cart-plus" style={{ fontSize: '15px', }}></i>
                                                                 </Button>}
-                                                            />
+
+/>
+                                                   
+                                                            
                                                         </div>
+                                                       
                                                     </DetailScreen>}
 
                                                 /></div>)

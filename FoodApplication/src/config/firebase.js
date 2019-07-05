@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-
+import Swal from 'sweetalert2'
 
 
 // Your web app's Firebase configuration
@@ -186,11 +186,26 @@ function getDishes() {
             dishesList[listkey].rest_uid = key;
             dishesList[listkey].dish_id = listkey;
 
-            console.log(productArray, "<<<<<<<<<<<<<<")
+             //console.log(productArray)
+            }
+            
           }
+          productArray.map((restdetail)=>{return(
+            db.ref('users/').once("value")
+            .then(restinfo => restinfo.val())
+            .then((restinfo)=>{
+              for(var rk in restinfo){
+                if(rk === restdetail.rest_uid){
+                 restdetail.rest_Name = restinfo[rk].resturantName
+                  restdetail.owner_Name = restinfo[rk].firstName +" "+restinfo[rk].lastName
+                  restdetail.email = restinfo[rk].email
+                }
+              }
+            })
 
-        }
-      }).then(() => {
+          )})
+      })
+      .then(() => {
         resolve(productArray)
       }).catch(e => {
         reject({ message: e })
@@ -232,7 +247,7 @@ function orderBooked(orderObj) {
           .then(() => {
             orderObj.user_uid = userId;
             db.ref(`orders/pendding/${orderObj.rest_uid}/`).push(orderObj)
-
+            
           })
       })
    // console.log("data has reached in fire base", orderObj)
@@ -241,22 +256,47 @@ function orderBooked(orderObj) {
 
 
 /////////////////////// order get From Pendding node
+var po = [];
 function getPenddingOrder(){
+   po = [];
   var userId = firebase.auth().currentUser.uid;
-
-  return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
     db.ref(`orders/pendding/`).once("value")
       .then(res => res.val())
       .then((res)=>{
-        
-            resolve(res)
-      
+          
+        for(var pkey in res){
+          if(pkey === userId){
+            for(var dpk in res[pkey]){
+              po.push(res[pkey][dpk])
+              res[pkey][dpk].pDishKey = dpk;
+              //resolve(res[pkey][dpk])
+              
+            }            
+          }
+        }
+       
+            resolve(po)
+            
       }).catch(e =>{
         reject({message : e})
       })
     })
 }
 
+
+
+//////////////// send to In progress table
+
+function sendToProgress(rest_uid,pDishKey,user_uid,item) {
+  db.ref(`orders/inprogress/${rest_uid}/${pDishKey}/`).set(item)
+  .then(()=>{
+    db.ref(`status/${user_uid}`).update({status:'In Progress'})
+  }).then(()=>{
+    db.ref(`orders/pendding/${rest_uid}/${pDishKey}/`).remove()
+  })
+  //console.log(rest_uid,pDishKey,user_uid,"yyyyyyy")
+}
 
 
 
@@ -276,11 +316,10 @@ export {
   getDishes,
   orderBooked,
   getPenddingOrder,
-
+  po,
+  sendToProgress,
 
 }
 
 
 
-//// google Map Api key for Get String Adress form
-// AIzaSyDTGKksa-yAJURHWqydkVja02jdh_fRgrc

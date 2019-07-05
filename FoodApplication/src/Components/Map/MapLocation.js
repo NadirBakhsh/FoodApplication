@@ -37,6 +37,7 @@ class MapLocation extends Component {
                 lng: location.coords.longitude
             }
             addLocation(ac,locationObject)
+            this.props.mapOff()
         });
     }
 
@@ -47,7 +48,7 @@ class MapLocation extends Component {
 
     render() {
 
-        const { lat, lng } = this.state;
+        const { lat, lng, } = this.state;
       
         return (
 
@@ -60,9 +61,9 @@ class MapLocation extends Component {
                     containerElement={<div style={{ height: `400px` }} />}
                     mapElement={<div style={{ height: `100%` }} />}
                 />
-                <Button onClick={this.locationUpdate} style={{ marginTop: '-45px', position: 'absolute' }} variant="contained" color="primary" >
+                <Button  onClick={this.locationUpdate} style={{ marginTop: '-45px', position: 'absolute' }} variant="contained" color="primary" >
                     Save Location
-                 </Button>
+                </Button>
             </div>
         );
     }

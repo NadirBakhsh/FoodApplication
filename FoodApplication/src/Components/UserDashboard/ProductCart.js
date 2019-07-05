@@ -23,6 +23,8 @@ class Card extends Component {
                                 src={this.props.imgUrl} />
 
                             <div className="card__header">
+                                                 
+                                <h3 className="card__header-title">{this.props.restName}</h3>
                                 <h3 className="card__header-title">{this.props.dishName}</h3>
                                 <p className="card__header-meta">
 

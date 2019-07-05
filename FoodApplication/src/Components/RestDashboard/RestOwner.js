@@ -25,6 +25,7 @@ class RestOwner extends Component {
             isDelivered: false,
             isOrderControll: false,
             boardName: "",
+           
         }
 
         this.viewFunc = this.viewFunc.bind(this)
@@ -63,6 +64,7 @@ class RestOwner extends Component {
                 isRestForm: false,
                 isPending: true, boardName: "Pending Orders"
             })
+           
         } else if (name === 'Inprogress') {
             this.setState({
                 isPending: false,
@@ -88,11 +90,13 @@ class RestOwner extends Component {
 
    async fatchPenddinfOrders(){
         try{
-            const  getingPenddingOrders = await getPenddingOrder()
-            console.log(getingPenddingOrders,"perdding Gating")
+             const  getingPenddingOrders = await getPenddingOrder()
+             console.log(getingPenddingOrders,"perdding Gating")
+                this.setState({getingPenddingOrders})
         }catch (e){
 
         }
+
     }
 
     render() {
@@ -101,6 +105,8 @@ class RestOwner extends Component {
             isPending, isInprogress,
             isDelivered, boardName,
             isOrderControll,
+            getingPenddingOrders,
+          
         } = this.state;
 
         return (
@@ -127,8 +133,8 @@ class RestOwner extends Component {
                                                 <Typography variant="h5" component="h3">{boardName}</Typography>
                                             </center>
 
-                                            {isPending && <PendingOrders 
-                                            
+                                            {isPending && <PendingOrders
+                                               PenddingPO={getingPenddingOrders}                                     
                                             />}
 
                                             {isInprogress && <Inprogress />}

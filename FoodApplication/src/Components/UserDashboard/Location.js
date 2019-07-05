@@ -83,7 +83,7 @@ class CustomizedDialogs extends React.Component {
           </DialogTitle>
           <DialogContent dividers>
                         
-            <MapLocation 
+            <MapLocation mapOff={this.handleClose}
             accountType={'User'}
             />
 
