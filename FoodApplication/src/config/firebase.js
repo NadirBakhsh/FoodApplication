@@ -274,8 +274,7 @@ function getPenddingOrder(){
               
             }            
           }
-        }
-       
+        }   
             resolve(po)
             
       }).catch(e =>{
@@ -300,6 +299,81 @@ function sendToProgress(rest_uid,pDishKey,user_uid,item) {
 
 
 
+/////////////////// getting data for In progress Table
+var inpro = [];
+function getInprogressOrder(){
+   inpro = [];
+  var userId = firebase.auth().currentUser.uid;
+    return new Promise((resolve, reject) => {
+    db.ref(`orders/inprogress/`).once("value")
+      .then(res => res.val())
+      .then((res)=>{
+          
+        for(var pkey in res){
+          if(pkey === userId){
+            for(var dpk in res[pkey]){
+              inpro.push(res[pkey][dpk])
+                            
+            }            
+          }
+        }   
+            resolve(inpro)
+            
+      }).catch(e =>{
+        reject({message : e})
+      })
+    })
+}
+
+
+///// sent to Delivered Node
+function sendToDelivery(rest_uid,pDishKey,user_uid,item) {
+  item.deliveredTime = firebase.database.ServerValue.TIMESTAMP;
+  db.ref(`orders/delivered/${rest_uid}/${pDishKey}/`).set(item)
+  .then(()=>{
+    db.ref(`status/${user_uid}`).update({status:'Delivered'})
+  }).then(()=>{
+    db.ref(`orders/inprogress/${rest_uid}/${pDishKey}/`).remove()
+  })
+ 
+}
+
+
+
+
+/////////////////// getting data for In progress Table
+var delivered = [];
+function getDelivered(){
+  delivered = [];
+  var userId = firebase.auth().currentUser.uid;
+    return new Promise((resolve, reject) => {
+    db.ref(`orders/delivered/`).once("value")
+      .then(res => res.val())
+      .then((res)=>{
+          
+        for(var pkey in res){
+          if(pkey === userId){
+            for(var dpk in res[pkey]){
+              delivered.push(res[pkey][dpk])
+                            
+            }            
+          }
+        }   
+            resolve(delivered)
+            console.log(delivered,",,,,,,,,,,,,")
+      }).catch(e =>{
+        reject({message : e})
+      })
+    })
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -318,6 +392,9 @@ export {
   getPenddingOrder,
   po,
   sendToProgress,
+  getInprogressOrder,
+  sendToDelivery,
+  getDelivered,
 
 }
 

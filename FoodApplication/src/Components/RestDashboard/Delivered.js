@@ -14,6 +14,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 
+
 const useStyles1 = makeStyles(theme => ({
   root: {
     flexShrink: 0,
@@ -84,12 +85,7 @@ function createData(username, contact, address, food, price, icon) {
   return { username, contact, address, food, price, icon };
 }
 
-const rows = [
-  createData('Ali', "03052013106", "Gulstan-e-johar", "Kawab", 200,
-    <i onClick={() => { alert("its Working func") }}
-      style={{ fontSize: '12px', cursor: 'pointer', color: 'blue', }}
-      className="far fa-clock"> 12:00 PM</i>),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
+const rows = [ ].sort((a, b) => (a.calories < b.calories ? -1 : 1));
 
 const useStyles2 = makeStyles(theme => ({
   root: {
@@ -104,7 +100,21 @@ const useStyles2 = makeStyles(theme => ({
   },
 }));
 
-export default function CustomPaginationActionsTable() {
+export default function CustomPaginationActionsTable(props) {
+  while (rows.length > 0) {
+    rows.pop()
+  }
+  const poArray = props.Delivered;
+  poArray.map((item) => {
+    return (
+      //console.log(item.firstName + " " + item.lastName,"mmmmmm")
+      rows.push(
+        createData(item.firstName + " " + item.lastName, item.contact, "Gulstan-e-johar", item.dishname, item.amount,
+          <i style={{ fontSize: '14px', cursor: 'pointer', color: 'blue', }}
+            className="far fa-clock"> Delivered </i>),
+      )
+    )
+  })
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);

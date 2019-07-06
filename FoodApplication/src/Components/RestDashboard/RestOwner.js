@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Loader from "../Loader/Loader"
 import Appbar from '../AppBar/Appbar'
 import TabsItem from '../AppBar/TabsItem'
-import { logout,getPenddingOrder } from '../../config/firebase'
+import { logout,getPenddingOrder,getInprogressOrder,getDelivered } from '../../config/firebase'
 import InfoForm from '../InfoAdd/InfoAddForm'
 import Typography from '@material-ui/core/Typography';
 import RestInfoInputForm from '../RestDashboard/InfoCellecetForm'
@@ -30,6 +30,7 @@ class RestOwner extends Component {
 
         this.viewFunc = this.viewFunc.bind(this)
         this.orderViewFunc = this.orderViewFunc.bind(this)
+        this.fatchPenddinfOrders = this.fatchPenddinfOrders.bind(this)
         
     }
 
@@ -91,8 +92,11 @@ class RestOwner extends Component {
    async fatchPenddinfOrders(){
         try{
              const  getingPenddingOrders = await getPenddingOrder()
-             console.log(getingPenddingOrders,"perdding Gating")
-                this.setState({getingPenddingOrders})
+             const  getingInprogressOrder = await getInprogressOrder()
+             const  getingdelivered = await getDelivered()
+
+             console.log(getingInprogressOrder,"progress list")
+                this.setState({getingPenddingOrders,getingInprogressOrder,getingdelivered})
         }catch (e){
 
         }
@@ -106,6 +110,8 @@ class RestOwner extends Component {
             isDelivered, boardName,
             isOrderControll,
             getingPenddingOrders,
+            getingInprogressOrder,
+            getingdelivered,
           
         } = this.state;
 
@@ -134,12 +140,19 @@ class RestOwner extends Component {
                                             </center>
 
                                             {isPending && <PendingOrders
-                                               PenddingPO={getingPenddingOrders}                                     
+                                               PenddingPO={getingPenddingOrders}
+                                               rerandList={this.fatchPenddinfOrders}                                     
                                             />}
 
-                                            {isInprogress && <Inprogress />}
+                                            {isInprogress && <Inprogress 
+                                            inpro={getingInprogressOrder}
+                                            rerandList={this.fatchPenddinfOrders}
+                                            />}
 
-                                            {isDelivered && <Delivered />}
+                                            {isDelivered && <Delivered 
+                                                Delivered={getingdelivered}
+                                                rerandList={this.fatchPenddinfOrders}
+                                            />}
 
                                         </InfoForm>
                                     </div>
@@ -161,7 +174,7 @@ class RestOwner extends Component {
                             />
 
                             <TabsItem
-                                myfunc={() => { this.orderViewFunc('Pending') }}
+                                myfunc={() => { this.orderViewFunc('Pending');this.fatchPenddinfOrders() }}
                                 myIcon={'fas fa-handshake'}
                                 tabName={'Pendding'}
                             />

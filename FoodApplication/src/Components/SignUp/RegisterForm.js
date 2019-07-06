@@ -245,7 +245,7 @@ class RegisterForm extends Component {
 
             <div className="createAccount">
               <button type="submit">Create Account</button>
-              <small className="small" onClick={() => this.props.history.push('/Login')}>Sign Up</small>
+              <small className="small" onClick={() => this.props.history.push('/Login')}>Login Form</small>
             </div>
           </form>
         </div>

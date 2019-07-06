@@ -133,12 +133,6 @@ class User extends Component {
 
     onCancelOreder = () => {
         this.setState({ orders: [] })
-        Swal.fire({
-            position: 'center',
-             title: 'Your Order Canceled and card cleared',
-            showConfirmButton: false,
-            timer: 1500
-          })
     }
 
 

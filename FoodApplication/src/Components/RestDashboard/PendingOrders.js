@@ -13,7 +13,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import {sendToProgress} from '../../config/firebase'
+import { sendToProgress } from '../../config/firebase'
 
 
 const useStyles1 = makeStyles(theme => ({
@@ -52,7 +52,7 @@ function TablePaginationActions(props) {
     onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   }
 
- 
+
 
   return (
     <div className={classes.root}>
@@ -98,7 +98,7 @@ function createData(username, contact, address, food, price, icon) {
 
 
 
-const rows = [ ].sort((a, b) => (a.calories < b.calories ? -1 : 1));
+const rows = [].sort((a, b) => (a.calories < b.calories ? -1 : 1));
 
 
 
@@ -118,20 +118,26 @@ const useStyles2 = makeStyles(theme => ({
 }));
 
 export default function CustomPaginationActionsTable(props) {
-
+  while (rows.length > 0) {
+    rows.pop()
+  }
   const poArray = props.PenddingPO;
-  poArray.map((item)=>{
+  poArray.map((item) => {
     return (
       //console.log(item.firstName + " " + item.lastName,"mmmmmm")
-        rows.push(
-          createData(item.firstName + " " + item.lastName , item.contact , "Gulstan-e-johar", item.dishname, item.amount,
-          <i onClick={() => { sendToProgress(item.rest_uid,item.pDishKey,item.user_uid,item) }}
+      rows.push(
+        createData(item.firstName + " " + item.lastName, item.contact, "Gulstan-e-johar", item.dishname, item.amount,
+          <i onClick={() => {
+            sendToProgress(item.rest_uid, item.pDishKey, item.user_uid, item);
+            props.rerandList()
+          }}
             style={{ fontSize: '14px', cursor: 'pointer', color: 'red', }}
             className="fas fa-check"> Proved </i>),
-            )     
+      )
     )
   })
 
+ 
 
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);

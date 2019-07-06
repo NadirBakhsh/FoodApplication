@@ -1,25 +1,51 @@
-import React, { Component } from 'react';
+import React from "react";
+import { MDBCarousel, MDBCarouselCaption, MDBCarouselInner, MDBCarouselItem, MDBView, MDBMask, MDBContainer } from "mdbreact";
+import img1 from  '../assets/imgs/f1.jpg'
+import img2 from  '../assets/imgs/f2.jpg'
+import img3 from  '../assets/imgs/f3.jpg'
 
-class Silder extends Component {
-
-    render() {
-        return (
-            <div>
-                <section class="slideshow">
-  <div class="slideshow-container slide">
-    <img src="http://placeimg.com/625/225/any"/>
-    <div class="text-container">
-      <p> I work with text too! And I'm just testing length here and stuff it's cool you know because that's important to do I guess hey did I ever tell you about that time that I did that stuff with the thing</p>
-    </div>
-    <img src="http://placeimg.com/625/225/animals"/>
-    <img src="http://placeimg.com/625/225/arch"/>
-  </div>
-</section>
-
-<p class="p">Demo by Tim Evko. <a href="http://www.sitepoint.com/you-dont-need-javascript-for-that" target="_blank">See article</a>.</p>
-            </div>
-        );
-    }
+const CarouselPage = () => {
+  return (
+    <MDBContainer>
+      <MDBCarousel
+        activeItem={1}
+        length={3}
+        showControls={false}
+        showIndicators={false}
+        className="z-depth-1"
+      >
+        <MDBCarouselInner>
+          <MDBCarouselItem itemId="1">
+            <MDBView>
+              <img style={{height:'450px',width:'100%'}}
+                className="d-block w-100"
+                src={img1}
+                alt="First slide"
+              />
+            </MDBView>
+          </MDBCarouselItem>
+          <MDBCarouselItem itemId="2">
+            <MDBView>
+              <img style={{height:'450px',width:'100%'}}
+                className="d-block w-100"
+                src={img2}
+                alt="Second slide"
+              />
+            </MDBView>
+          </MDBCarouselItem>
+          <MDBCarouselItem itemId="3">
+            <MDBView>
+              <img style={{height:'450px',width:'100%'}}
+                className="d-block w-100"
+                src={img3}
+                alt="Third slide"
+              />
+            </MDBView>
+          </MDBCarouselItem>
+        </MDBCarouselInner>
+      </MDBCarousel>
+    </MDBContainer>
+  );
 }
 
-export default Silder;
+export default CarouselPage;
