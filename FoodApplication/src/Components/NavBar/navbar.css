@@ -1,5 +1,9 @@
+
 .navBarDiv{
- display: inline;
+ display: flex;
+ flex-direction: row;
+ float: right;
+
 }
 
 .titleHeading{
@@ -17,7 +21,20 @@
     font-size: 1em;
     font-weight: lighter;
     letter-spacing: 1px;
-    margin-bottom: 0.25em;
+    margin-bottom: 0.5em;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .navBarDiv{
+      justify-content: space-evenly;
+      float: none;
+    }
+    .titleHeading{
+      display: flex;
+      justify-content: center;
+      margin-bottom: 5px;
+      border-bottom: 1px solid gray;
+    }
   }
   
  button:hover {

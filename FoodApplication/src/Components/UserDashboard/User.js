@@ -148,7 +148,7 @@ class User extends Component {
             title: 'Your Order Confirmed',
             showConfirmButton: false,
             timer: 1500
-          })
+        })
     }
 
 
@@ -215,10 +215,10 @@ class User extends Component {
                                                     addToCard={<DetailScreen
                                                         orderDrop={this.onCancelOreder}
                                                         saveOrder={this.onSaveOrder}
-                                                        CardIcon={ <CardIcon badgeContentcounter ={orders.length} />}
+                                                        CardIcon={<CardIcon badgeContentcounter={orders.length} />}
                                                     >
 
-                                                        <div style={{ margin: "50px auto",display:'flex', justifyItems:'space-between',  }}>
+                                                        <div style={{ margin: "50px auto", display: 'flex', justifyItems: 'space-between', }}>
                                                             <Card
                                                                 dishName={item.dishname}
                                                                 price={'Rs' + item.amount}
@@ -229,11 +229,11 @@ class User extends Component {
                                                                     Buy{' - '} <i className="fas fa-cart-plus" style={{ fontSize: '15px', }}></i>
                                                                 </Button>}
 
-/>
-                                                   
-                                                            
+                                                            />
+
+
                                                         </div>
-                                                       
+
                                                     </DetailScreen>}
 
                                                 /></div>)

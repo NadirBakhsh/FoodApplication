@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {login,checkAccountTpye} from '../../config/firebase'
 import { update_user } from '../../store/action';
 import { connect } from 'react-redux';
-
+import InfoForm from '../InfoAdd/InfoAddForm'
 import "./loginform.css";
 
 const emailRegex = RegExp(
@@ -11,12 +11,10 @@ const emailRegex = RegExp(
 
 const formValid = ({ formErrors, ...rest }) => {
   let valid = true;
-
   // validate form errors being empty
   Object.values(formErrors).forEach(val => {
     val.length > 0 && (valid = false);
   });
-
   // validate the form was filled out
   Object.values(rest).forEach(val => {
     val === null && (valid = false);
@@ -30,24 +28,17 @@ class LoginForm extends Component {
     super(props);
 
     this.state = {
-      
       email: null,
-      password: null,
-      
+      password: null,      
       formErrors: {
-       
-        email: "",
-        password: "",
-       
+         email: "",
+        password: "",      
         
       }
     };
 
     this.onLogin = this.onLogin.bind(this)
-
   }
-
-
 
   async onLogin() {
     const { email, password } = this.state;
@@ -79,15 +70,7 @@ class LoginForm extends Component {
     if (formValid(this.state)) {
       this.onLogin()
 
-
-
-      //this.props.history.push('/User')
-      // console.log(`
-      //   --SUBMITTING-- 
-      //   Email: ${this.state.email}
-      //   Password: ${this.state.password}
-      // `);
-    } else {
+   } else {
       console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
     }
   };
@@ -119,8 +102,8 @@ class LoginForm extends Component {
     return (
       <div>
       <button style={{ marginLeft:"10px", position:"absolute" }}  className="but-login btn button:hover" onClick={() => this.props.history.push('/')} >Back</button>
-      <div className="wrapper">
-        <div className="form-wrapper">
+      <div className="wrapper" >
+          <InfoForm>
           <h1>Login Form</h1>
           <form onSubmit={this.handleSubmit} noValidate>         
             <div className="email">
@@ -157,7 +140,8 @@ class LoginForm extends Component {
               <small className="small" onClick={() => this.props.history.push('/RegisterForm')}>Sign Up</small>
             </div>
           </form>
-        </div>
+          </InfoForm>
+       
       </div>
       </div>
     );

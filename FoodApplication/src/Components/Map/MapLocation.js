@@ -42,16 +42,9 @@ class MapLocation extends Component {
     }
 
 
-
-
-
-
     render() {
-
-        const { lat, lng, } = this.state;
-      
+        const { lat, lng, } = this.state;      
         return (
-
             <div style={{ width: "600px" }}>
                 <MyMapComponent
                     isMarkerShown

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./reg.css";
+import InfoForm from '../InfoAdd/InfoAddForm'
 
 
 //fun import from firebase
@@ -145,7 +146,8 @@ class RegisterForm extends Component {
       <div className="wrapper">
       
 
-        <div className="form-wrapper">
+        <div className='form-wrapper'>
+          <InfoForm>
           <h1>Create Account</h1>
           <form onSubmit={this.handleSubmit} noValidate>
             <div className="firstName">
@@ -248,6 +250,7 @@ class RegisterForm extends Component {
               <small className="small" onClick={() => this.props.history.push('/Login')}>Login Form</small>
             </div>
           </form>
+          </InfoForm>
         </div>
       </div>
       </div>
