@@ -1,1 +1,2 @@
 # FoodApplication
+npm start
